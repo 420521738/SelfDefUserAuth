@@ -15,16 +15,22 @@ import random
 from io import BytesIO
 
 
+# Restful用户接口类，排序以时间倒序
 class UserViewSet(viewsets.ModelViewSet):
     queryset = UserProfile.objects.all().order_by('-date_joined')
+    # This 定义使用的序列化的类
     serializer_class = UserSerializer
 
+# Restful部门或组接口类
 class DepartmentViewSet(viewsets.ModelViewSet):
     queryset = Department.objects.all()
+    # This 定义使用的序列化的类
     serializer_class = DepartmentSerializer
 
+# Restful角色接口类
 class RoleViewSet(viewsets.ModelViewSet):
     queryset = Role.objects.all()
+    # This 定义使用的序列化的类
     serializer_class = RoleSerializer
 
 
