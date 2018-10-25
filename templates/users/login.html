@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>登录以及用户管理模块</title>
+	<link href="/static/css/bootstrap.min.css" rel="stylesheet">
+	<link href="/static/css/nifty.min.css" rel="stylesheet">
+   <link href="/static/css/font-awesome.min.css" rel="stylesheet">
+   <link href="/static/plugins/bootstrap-validator/bootstrapValidator.min.css" rel="stylesheet">
+</head>
+
+<body>
+	<div id="container" style="background-image: url('/static/img/login.png');background-repeat: no-repeat; -webkit-background-size: 100%;">>
+	
+		<!-- LOGIN FORM -->
+		<div class="cls-content" style="margin-top: 80px;">
+			<div class="cls-content-sm panel">
+				
+				<center style="font-size:210%;color:#1E90FF;">登录以及用户管理模块</center>
+				<div class="panel-body">
+					<form id="loginForm" action="{% url 'login' %}?next={{ next  }}" method="POST"> {% csrf_token %}
+						<div class="form-group">
+							<div class="input-group">
+								<div class="input-group-addon"><i class="fa fa-user"></i></div>
+								<input type="text" class="form-control" name="email" placeholder="Username">
+							</div>
+						</div>
+						<div class="form-group">
+							<div class="input-group">
+								<div class="input-group-addon"><i class="fa fa-asterisk"></i></div>
+								<input type="password" class="form-control" name="password" placeholder="Password">
+							</div>
+						</div>
+
+						<!-- 这里是验证码模块，还包括最下面的一段js，是点击验证码就换一张图片的功能 -->
+		                <div class="input-group input-group-lg">
+		                    <span class="input-group-addon">
+
+		                        <img src="/user/verifycode/?1" id="verifycode"
+		                             style="cursor:pointer">
+		                    </span>
+		                    <input type="text" name="vcode" class="form-control input-lg" id="vcode" placeholder="请输入验证码">
+		                    <span class="glyphicon form-control-feedback"></span>
+		                    <span class="input-group-addon-kaptcha">
+		                        
+		                    </span>
+		                </div>
+
+						<button class="btn btn-success  btn-block" type="submit">
+							<b>登录</b>
+						</button>
+                        <input type="hidden" name="next" value="{{ next }}" />
+                        <h4 style="color: red"><b>{{ login_err }}</b></h4>
+					</form>
+				</div>
+			</div>
+		</div>
+		
+
+		
+		
+	</div>
+	<script src="/static/js/jquery-2.1.1.min.js"></script>
+	<script src="/static/js/bootstrap.min.js"></script>
+   <script src="/static/plugins/bootstrap-validator/bootstrapValidator.js"></script>
+
+<script type="text/javascript">
+$(document).ready(function() {
+    $('#loginForm').bootstrapValidator({
+        message: 'This value is not valid',
+        feedbackIcons: {
+            valid: 'glyphicon glyphicon-ok',
+            invalid: 'glyphicon glyphicon-remove',
+            validating: 'glyphicon glyphicon-refresh'
+        },
+        fields: {
+            email: {
+                message: 'The username is not valid',
+                validators: {
+                    notEmpty: {
+                        message: 'The username is required and cannot be empty'
+                    },
+                    stringLength: {
+                        min: 2,
+                        max: 30,
+                        message: 'The username must be more than 6 and less than 30 characters long'
+                    },
+                    regexp: {
+                        regexp: /^[a-zA-Z0-9_]+$/,
+                        message: 'The username can only consist of alphabetical, number and underscore'
+                    }
+                }
+            },
+            password:{
+                message: "The password is not valid",
+                validators:{
+                    notEmpty:{
+                        'message': "the password is required and cannot be empty"
+                    },
+                    stringLength:{
+                        min:3,
+                        max:30,
+                        message:'The username must be more than 6 and less than 30 characters long'
+                    },
+                }
+            },
+
+            email: {
+                validators: {
+                    notEmpty: {
+                        message: 'The email is required and cannot be empty'
+                    },
+                }
+            }
+        }
+    });
+});
+
+</script>
+
+<script type="text/javascript">
+    $(function(){
+        $('#verifycode').css('cursor','pointer').click(function() {
+            $('#verifycode').attr('src',$('#verifycode').attr('src')+1)
+        });
+    });
+</script>
+
+</body>
+</html>
