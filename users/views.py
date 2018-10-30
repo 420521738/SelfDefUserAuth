@@ -2,8 +2,6 @@
 #coding:utf-8
 
 from rest_framework import viewsets
-from users.serializers import UserSerializer, DepartmentSerializer, RoleSerializer
-from users.models import UserProfile, Department, Role
 from django.shortcuts import render,HttpResponse,HttpResponseRedirect
 from django.core.urlresolvers import reverse
 from django.contrib import auth
@@ -13,26 +11,7 @@ from PIL import Image, ImageDraw, ImageFont
 #引入随机函数模块
 import random
 from io import BytesIO
-
-
-# Restful用户接口类，排序以时间倒序
-class UserViewSet(viewsets.ModelViewSet):
-    queryset = UserProfile.objects.all().order_by('-date_joined')
-    # This 定义使用的序列化的类
-    serializer_class = UserSerializer
-
-# Restful部门或组接口类
-class DepartmentViewSet(viewsets.ModelViewSet):
-    queryset = Department.objects.all()
-    # This 定义使用的序列化的类
-    serializer_class = DepartmentSerializer
-
-# Restful角色接口类
-class RoleViewSet(viewsets.ModelViewSet):
-    queryset = Role.objects.all()
-    # This 定义使用的序列化的类
-    serializer_class = RoleSerializer
-
+from django.views.decorators.csrf import csrf_exempt
 
 # 登录验证模块
 def acc_login(request):
@@ -143,3 +122,5 @@ def verifycode(request):
     
     #将内存中的图片数据返回给客户端，MIME类型为图片png
     return HttpResponse(buf.getvalue(),content_type="image/png")
+
+        

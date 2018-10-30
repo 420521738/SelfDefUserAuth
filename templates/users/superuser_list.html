@@ -1,0 +1,125 @@
+{% extends 'base.html' %}
+
+{% block header-css %}
+	<link rel="stylesheet" href="/static/dist/css/AdminLTE.min.css">
+{% endblock %}
+
+{% block page-content-title %}
+超级管理员设定
+{% endblock %}
+
+{% block page-content %}
+
+<div>
+    <!-- Main content -->
+    <section class="content">
+        <form action="" method="post" id="user_form">
+                {% csrf_token %}
+            <div class="box">
+
+                <!-- /.box-header -->
+                <div class="box-body">
+                  <table class="table table-striped table-bordered" id="dataform">
+                      <thead>
+                        <tr>
+                            <th>姓名</th>
+                            <th>是否普通管理员</th>
+                            <th>是否超级管理员</th>
+                            <th>状态</th>
+                            <th>操作</th>
+                        </tr>
+                      </thead>
+                            <tbody>
+                                {% for i in all_user %}
+                                    <tr class="even gradeX">
+                                        <td>{{ i.name }}</td>
+                                        <td>
+                                            {% if i.is_admin %}
+                                                <span class="label label-success">是</span>
+                                            {% else %}
+                                                <span class="label label-danger">否</span>
+                                            {% endif %}
+                                        </td>
+                                        <td>
+                                            {% if i.is_superuser %}
+                                                <span class="label label-success">是</span>
+                                            {% else %}
+                                                <span class="label label-danger">否</span>
+                                            {% endif %}
+                                        </td>
+                                        <td>
+                                            {% if i.is_active %}
+                                                <span class="label label-success">启用</span>
+                                            {% else %}
+                                                <span class="label label-danger">禁用</span>
+                                            {% endif %}
+                                        </td>
+                                        <td class="text-center" data-editable='false'>
+                                       	  <a href="#"><li class="btn btn-sm btn-info" onclick="return tanchu(this.value)" value="{{ i.id }}">编辑</li></a>
+                                    	 </td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                  </table>
+                </div>
+            </div>
+        </form>
+    </section>
+        <!-- /.content -->
+{#用于接收user_edit.html中layui子层的传值#}
+<input id="handle_status" value="" hidden="hidden">
+</div>
+
+<script src="/static/plugins/datatables/DataTables-1.10.9/js/jquery.dataTables.min.js"></script>
+<script src="/static/plugins/datatables/DataTables-1.10.9/js/dataTables.bootstrap.min.js"></script>
+
+<script>
+  $(function () {
+    $('#dataform').DataTable({
+      "paging": true,
+      "lengthChange": true,
+      "searching": true,
+      "ordering": true,
+      "info": true,
+      "autoWidth": true
+    });
+  });
+</script>
+
+<script>
+function tanchu(n){
+    layer.open({
+    type: 2,
+    title: '管理员设定更改',
+    closeBtn: 1,
+    area: ['700px', '550px'],
+    shadeClose: true, //点击遮罩关闭
+    content: ['/user/superuser/edit/' + n,],
+    end:function(){
+            var handle_status = $("#handle_status").val();
+            if ( handle_status == '1' ) {
+                layer.msg('保存成功！',{
+                    icon: 1,
+                    time: 1000 //2秒关闭（如果不配置，默认是3秒）
+                },function(){
+                    history.go(0);
+                });
+            } else if ( handle_status == '2' ) {
+                layer.msg('修改失败！',{
+                    icon: 2,
+                    time: 1000 //2秒关闭（如果不配置，默认是3秒）
+                },function(){
+                    history.go(0);
+                });
+            }
+        }
+  });
+}
+</script>
+
+{% endblock %}
+
+{% block  bottom-js %}
+	<script src="/static/layer/layer.js"></script>
+	<script src="/static/js/base.js"></script>
+{% endblock %}
